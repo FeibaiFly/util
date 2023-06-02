@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qtone.util.dao.test.TestUcMapper" >
+
+
+    <insert id="insertFamilyPhoneMemberRecord">
+        INSERT INTO `family_phone_member_record` (
+	`imei_phone`,
+	`school_id`,
+	`class_id`,
+	`user_id`,
+	`user_type`,
+	`province_id`,
+	`city_id`,
+	`district_id`,
+	`batch_number`,
+	`label_code`,
+	`label_name`,
+	`family_phone`,
+	`bind_type`,
+	`status`,
+	`fail_msg`
+)
+VALUES
+	(#{imeiPhone},#{schoolId},#{classId},#{userId},#{userType},#{provinceId},#{cityId},#{districtId},#{batchNumber},
+	#{labelCode},#{labelName},#{familyPhone},#{bindType},#{status},#{failMsg});
+    </insert>
+
+	<select id="getFamilyPhoneMemberRecord" resultType="com.qtone.util.qinqingwang.entity.FamilyPhoneMemberRecord">
+		SELECT
+			imei_phone imeiPhone,
+			family_phone familyPhone,
+		STATUS
+		FROM
+			family_phone_member_record
+		WHERE
+			batch_number = #{batchNumber}
+	</select>
+	
+	<select id="getOrderGtid" resultType="string">
+	    SELECT gtid  from order_request where gtid = #{gtid} limit 1;
+</select>
+
+<insert id="insertOrderRequest">
+INSERT INTO `order_request`(`gtid`, `paramString`) VALUES (#{gtid}, #{paramString});
+</insert>
+</mapper>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtone.util.dao.test.OrderRequestMapper">
+  <resultMap id="BaseResultMap" type="com.qtone.util.updateOrder.entity.OrderRequest">
+    <!--@mbg.generated-->
+    <!--@Table order_request-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="gtid" jdbcType="VARCHAR" property="gtid" />
+    <result column="paramString" jdbcType="LONGVARCHAR" property="paramstring" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, gtid, paramString
+  </sql>
+</mapper>

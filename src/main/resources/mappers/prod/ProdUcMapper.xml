@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qtone.util.dao.prod.ProdUcMapper">
+    <select id="getBindImeiPhone" resultType="com.qtone.util.qinqingwang.entity.FamilyPhoneMemberRecord">
+
+
+        SELECT
+        imei_phone imeiPhone,
+        sc.id schoolId,
+        s.classId,
+        s.id userId,
+        2 userType,
+        sc.province_id provinceId,
+        sc.city_id cityId,
+        sc.district_id districtId,
+        toc.target_tel_str familyPhone
+        FROM
+        student_extend se
+        LEFT JOIN student s ON se.id = s.id
+        LEFT JOIN school sc ON s.school_id = sc.id
+        LEFT JOIN hdkt_gps.terminal_outbound_call toc ON s.id = toc.user_id
+        AND toc.user_type = 2
+        AND toc.is_deleted = 0
+        WHERE
+        se.is_deleted = 0
+        AND s.is_deleted = 0
+        AND sc.is_deleted = 0
+        AND imei_phone IN
+
+
+        <foreach collection="list" item="item" open="(" separator="," close=")" index="index">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getSchoolAreaByParentId" resultType="com.qtone.util.saveSchool.dto.SchoolArea">
+
+
+        SELECT id,`code`,province,city,district from dict_schoolArea where parent_id = #{parentId}
+
+
+    </select>
+
+    <select id="getSchoolByName"  resultType="com.qtone.util.saveSchool.dto.HdktSchool">
+
+        SELECT
+            id,
+            schoolName
+        FROM
+            school
+        WHERE
+            schoolName = #{schoolName}
+            AND province_id = #{provinceId} and is_deleted=0 limit 1
+
+    </select>
+
+    <select id="getAddBindNum" resultType="int">
+        SELECT count(1) from student where send_time BETWEEN #{startTime} and #{endTime}
+</select>
+
+    <select id="getAnswerNum" resultType="int">
+        SELECT count(1) from answer_4g_log where create_time BETWEEN #{startTime} and #{endTime}
+    </select>
+</mapper>

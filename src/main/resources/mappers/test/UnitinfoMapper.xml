@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qtone.util.dao.test.UnitinfoMapper" >
+  <resultMap id="BaseResultMap" type="com.qtone.util.zxx.entity.Unitinfo" >
+    <id column="unit_id" property="unitId" jdbcType="VARCHAR" />
+    <result column="tagId" property="tagid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    unit_id, tagId
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qtone.util.zxx.entity.UnitinfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from unitinfo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from unitinfo
+    where unit_id = #{unitId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from unitinfo
+    where unit_id = #{unitId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.qtone.util.zxx.entity.UnitinfoExample" >
+    delete from unitinfo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.qtone.util.zxx.entity.Unitinfo" >
+    insert into unitinfo (unit_id, tagId)
+    values (#{unitId,jdbcType=VARCHAR}, #{tagid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qtone.util.zxx.entity.Unitinfo" >
+    insert into unitinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="unitId != null" >
+        unit_id,
+      </if>
+      <if test="tagid != null" >
+        tagId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="unitId != null" >
+        #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="tagid != null" >
+        #{tagid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.qtone.util.zxx.entity.UnitinfoExample" resultType="java.lang.Integer" >
+    select count(*) from unitinfo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update unitinfo
+    <set >
+      <if test="record.unitId != null" >
+        unit_id = #{record.unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tagid != null" >
+        tagId = #{record.tagid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update unitinfo
+    set unit_id = #{record.unitId,jdbcType=VARCHAR},
+      tagId = #{record.tagid,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qtone.util.zxx.entity.Unitinfo" >
+    update unitinfo
+    <set >
+      <if test="tagid != null" >
+        tagId = #{tagid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where unit_id = #{unitId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qtone.util.zxx.entity.Unitinfo" >
+    update unitinfo
+    set tagId = #{tagid,jdbcType=VARCHAR}
+    where unit_id = #{unitId,jdbcType=VARCHAR}
+  </update>
+
+  <select id="getZxxIdInfo" resultType="com.qtone.util.zxx.model.ZxxId">
+    SELECT
+	t4.id,
+	t1.id hdktGradeLevelId,
+	t1.zxx_id gradeLevelId,
+	t2.id hdktSubjectId,
+	t2.zxx_id subjectId,
+	t3.id hdktMaterialId,
+	t3.zxx_id materialId,
+	t4.id hdktGradeId,
+	t4.zxx_id gradeId
+FROM
+	public_resource_dict_grade_level t1
+	LEFT JOIN public_resource_dict_subject t2 on t1.id = t2.grade_level_id
+	LEFT JOIN public_resource_dict_material t3 on t2.id = t3.subject_id
+	LEFT JOIN public_resource_dict_grade t4 on t3.id = t4.material_id
+	where t1.is_deleted = 0
+	 and t2.is_deleted = 0
+	  and t3.is_deleted = 0
+	and t4.is_deleted = 0
+-- 	and t1.id>14
+  </select>
+
+  <select id="getUnitId" resultType="string">
+    SELECT
+        unit_id
+    FROM
+        unitinfo
+    WHERE
+        find_in_set( #{gradeLevelId}, tagId )
+        AND find_in_set(#{subjectId}, tagId )
+        AND find_in_set( #{materialId}, tagId )
+        AND find_in_set( #{gradeId}, tagId )
+  </select>
+
+</mapper>

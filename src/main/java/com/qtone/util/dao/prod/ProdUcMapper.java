@@ -3,6 +3,7 @@ package com.qtone.util.dao.prod;
 import com.qtone.util.qinqingwang.entity.FamilyPhoneMemberRecord;
 import com.qtone.util.saveSchool.dto.HdktSchool;
 import com.qtone.util.saveSchool.dto.SchoolArea;
+import com.qtone.util.weeklyData.SchoolWeekDataStatistics;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,4 +21,7 @@ public interface ProdUcMapper {
 
     Integer getAnswerNum(@Param("startTime")String startTime,@Param("endTime")String endTime);
 
+    List<SchoolWeekDataStatistics> getSchoolBindInfo(@Param("startTime")String startTime,@Param("endTime")String endTime);
+
+    List<SchoolWeekDataStatistics> getSchoolUnBindNumByStudetnId(@Param("list")List<Integer> studentIds);
 }

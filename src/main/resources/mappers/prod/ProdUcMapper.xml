@@ -4,6 +4,8 @@
     <select id="getBindImeiPhone" resultType="com.qtone.util.qinqingwang.entity.FamilyPhoneMemberRecord">
 
 
+
+
         SELECT
         imei_phone imeiPhone,
         sc.id schoolId,
@@ -28,6 +30,8 @@
         AND imei_phone IN
 
 
+
+
         <foreach collection="list" item="item" open="(" separator="," close=")" index="index">
             #{item}
         </foreach>
@@ -36,12 +40,18 @@
     <select id="getSchoolAreaByParentId" resultType="com.qtone.util.saveSchool.dto.SchoolArea">
 
 
+
+
         SELECT id,`code`,province,city,district from dict_schoolArea where parent_id = #{parentId}
+
+
 
 
     </select>
 
-    <select id="getSchoolByName"  resultType="com.qtone.util.saveSchool.dto.HdktSchool">
+    <select id="getSchoolByName" resultType="com.qtone.util.saveSchool.dto.HdktSchool">
+
+
 
         SELECT
             id,
@@ -52,13 +62,67 @@
             schoolName = #{schoolName}
             AND province_id = #{provinceId} and is_deleted=0 limit 1
 
+
+
     </select>
 
     <select id="getAddBindNum" resultType="int">
+
+
         SELECT count(1) from student where send_time BETWEEN #{startTime} and #{endTime}
-</select>
+
+
+    </select>
 
     <select id="getAnswerNum" resultType="int">
+
+
         SELECT count(1) from answer_4g_log where create_time BETWEEN #{startTime} and #{endTime}
+
+
+    </select>
+
+    <select id="getSchoolBindInfo" resultType="com.qtone.util.weeklyData.SchoolWeekDataStatistics">
+
+    SELECT t.* from
+    (
+            SELECT
+                sc.province_name provinceName,
+                sc.city_name cityName,
+                sc.district_name districtName,
+                sc.id schoolId,
+                sc.schoolName,
+                count(s.id) totalStudentNum ,
+                count(s.create_time &gt;= #{startTime} and s.create_time &lt; #{endTime} or null) studentNum,
+                count(LENGTH(s.send_time) &gt;= 10 or null) totalBindNum ,
+                count(s.send_time &gt;= #{startTime} and s.send_time &lt; #{endTime} or null) bindNum
+            FROM
+                student s
+                LEFT JOIN school sc ON s.school_id = sc.id
+                where s.is_deleted = 0 and school_id is not NULL
+    GROUP BY
+        sc.id) t where t.totalBindNum>0
+
+
+    </select>
+
+    <select id="getSchoolUnBindNumByStudetnId" resultType="com.qtone.util.weeklyData.SchoolWeekDataStatistics">
+
+    SELECT
+        sc.id schoolId,
+        count(s.id) unBindNum
+    FROM
+        student s
+        LEFT JOIN school sc ON s.school_id = sc.id
+    WHERE
+        (LENGTH(s.send_time) &lt; 2 or s.send_time is null)
+        AND s.is_deleted = 0
+        AND s.id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")" index="index">
+            #{item}
+        </foreach>
+    GROUP BY
+        sc.id
+
     </select>
 </mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtone.util.dao.test.SchoolWeekDataStatisticsMapper">
+  <resultMap id="BaseResultMap" type="com.qtone.util.weeklyData.SchoolWeekDataStatistics">
+    <!--@mbg.generated-->
+    <!--@Table SchoolWeekDataStatistics-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="province_name" jdbcType="VARCHAR" property="provinceName" />
+    <result column="city_name" jdbcType="VARCHAR" property="cityName" />
+    <result column="district_name" jdbcType="VARCHAR" property="districtName" />
+    <result column="school_id" jdbcType="INTEGER" property="schoolId" />
+    <result column="school_name" jdbcType="VARCHAR" property="schoolName" />
+    <result column="total_student_num" jdbcType="INTEGER" property="totalStudentNum" />
+    <result column="student_num" jdbcType="INTEGER" property="studentNum" />
+    <result column="total_bind_num" jdbcType="INTEGER" property="totalBindNum" />
+    <result column="bind_num" jdbcType="INTEGER" property="bindNum" />
+    <result column="total_call_num" jdbcType="INTEGER" property="totalCallNum" />
+    <result column="call_num" jdbcType="INTEGER" property="callNum" />
+    <result column="total_call_duration" jdbcType="INTEGER" property="totalCallDuration" />
+    <result column="call_duration" jdbcType="INTEGER" property="callDuration" />
+    <result column="report_location_num" jdbcType="INTEGER" property="reportLocationNum" />
+    <result column="request_location_num" jdbcType="INTEGER" property="requestLocationNum" />
+    <result column="sos_alarm_num" jdbcType="INTEGER" property="sosAlarmNum" />
+    <result column="regional_alarm_num" jdbcType="INTEGER" property="regionalAlarmNum" />
+    <result column="un_bind_num" jdbcType="INTEGER" property="unBindNum" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, province_name, city_name, district_name, school_id, school_name, total_student_num, 
+    student_num, total_bind_num, bind_num, total_call_num, call_num, total_call_duration, 
+    call_duration, report_location_num, request_location_num, sos_alarm_num, regional_alarm_num, 
+    un_bind_num, create_time, update_time
+  </sql>
+  <select id="getBySchoolId" resultMap="BaseResultMap">
+  select
+  <include refid="Base_Column_List" />
+  from SchoolWeekDataStatistics
+  where school_id = #{schoolId} limit 1
+</select>
+
+<insert id="insertData" parameterType="com.qtone.util.weeklyData.SchoolWeekDataStatistics" >
+    insert into SchoolWeekDataStatistics (id, province_name, city_name,
+      district_name, school_id, school_name,
+      total_student_num, student_num, total_bind_num,
+      bind_num, total_call_num, call_num,
+      total_call_duration, call_duration, report_location_num,
+      request_location_num, sos_alarm_num, regional_alarm_num,
+      un_bind_num, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{provinceName,jdbcType=VARCHAR}, #{cityName,jdbcType=VARCHAR},
+      #{districtName,jdbcType=VARCHAR}, #{schoolId,jdbcType=INTEGER}, #{schoolName,jdbcType=VARCHAR},
+      #{totalStudentNum,jdbcType=INTEGER}, #{studentNum,jdbcType=INTEGER}, #{totalBindNum,jdbcType=INTEGER},
+      #{bindNum,jdbcType=INTEGER}, #{totalCallNum,jdbcType=INTEGER}, #{callNum,jdbcType=INTEGER},
+      #{totalCallDuration,jdbcType=INTEGER}, #{callDuration,jdbcType=INTEGER}, #{reportLocationNum,jdbcType=INTEGER},
+      #{requestLocationNum,jdbcType=INTEGER}, #{sosAlarmNum,jdbcType=INTEGER}, #{regionalAlarmNum,jdbcType=INTEGER},
+      #{unBindNum,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.qtone.util.weeklyData.SchoolWeekDataStatistics" >
+    update SchoolWeekDataStatistics
+    set province_name = #{provinceName,jdbcType=VARCHAR},
+      city_name = #{cityName,jdbcType=VARCHAR},
+      district_name = #{districtName,jdbcType=VARCHAR},
+      school_id = #{schoolId,jdbcType=INTEGER},
+      school_name = #{schoolName,jdbcType=VARCHAR},
+      total_student_num = #{totalStudentNum,jdbcType=INTEGER},
+      student_num = #{studentNum,jdbcType=INTEGER},
+      total_bind_num = #{totalBindNum,jdbcType=INTEGER},
+      bind_num = #{bindNum,jdbcType=INTEGER},
+      total_call_num = #{totalCallNum,jdbcType=INTEGER},
+      call_num = #{callNum,jdbcType=INTEGER},
+      total_call_duration = #{totalCallDuration,jdbcType=INTEGER},
+      call_duration = #{callDuration,jdbcType=INTEGER},
+      report_location_num = #{reportLocationNum,jdbcType=INTEGER},
+      request_location_num = #{requestLocationNum,jdbcType=INTEGER},
+      sos_alarm_num = #{sosAlarmNum,jdbcType=INTEGER},
+      regional_alarm_num = #{regionalAlarmNum,jdbcType=INTEGER},
+      un_bind_num = #{unBindNum,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="incrTotalCallInfo">
+  update SchoolWeekDataStatistics set total_call_duration = total_call_duration+#{callDuration},total_call_num =total_call_num+#{callNum}   where school_id = #{schoolId}
+</update>
+</mapper>

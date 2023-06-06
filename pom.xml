@@ -91,6 +91,13 @@
             <artifactId>poi-ooxml</artifactId>
             <version>3.8</version>
         </dependency>
+
+        <!-- mybaitsi-plus -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.5.2</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>

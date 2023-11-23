@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.qtone.util.dao.prod.ProdUcMapper">
+
+<resultMap id="TerminalPhoneMap" type="com.qtone.util.dto.TerminalPhone">
+        <!--@mbg.generated-->
+        <!--@Table terminal_phone-->
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="user_type" property="userType"/>
+        <result column="user_tel" property="userTel"/>
+        <result column="user_tel_mask" property="userTelMask"/>
+        <result column="password" property="password"/>
+        <result column="card_type" property="cardType"/>
+        <result column="card_status" property="cardStatus"/>
+        <result column="status" property="status"/>
+        <result column="send_time" property="sendTime"/>
+        <result column="card_num" property="cardNum"/>
+        <result column="imei" property="imei"/>
+        <result column="phone" property="phone"/>
+        <result column="school_id" property="schoolId"/>
+        <result column="school_name" property="schoolName"/>
+        <result column="province_id" property="provinceId"/>
+        <result column="province_name" property="provinceName"/>
+        <result column="city_id" property="cityId"/>
+        <result column="city_name" property="cityName"/>
+        <result column="district_id" property="districtId"/>
+        <result column="district_name" property="districtName"/>
+        <result column="class_id" property="classId"/>
+        <result column="class_name" property="className"/>
+        <result column="grade_id" property="gradeId"/>
+        <result column="grade_name" property="gradeName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="delete_time" property="deleteTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="department_name" property="departmentName"/>
+    </resultMap>
     <select id="getBindImeiPhone" resultType="com.qtone.util.qinqingwang.entity.FamilyPhoneMemberRecord">
-
-
-
-
         SELECT
         imei_phone imeiPhone,
         sc.id schoolId,
@@ -82,7 +114,7 @@
 
     </select>
 
-    <select id="getSchoolBindInfo" resultType="com.qtone.util.weeklyData.SchoolWeekDataStatistics">
+    <select id="getSchoolBindInfo" resultType="com.qtone.util.dataStatistics.week.dto.SchoolWeekDataStatistics">
 
     SELECT t.* from
     (
@@ -106,7 +138,7 @@
 
     </select>
 
-    <select id="getSchoolUnBindNumByStudetnId" resultType="com.qtone.util.weeklyData.SchoolWeekDataStatistics">
+    <select id="getSchoolUnBindNumByStudetnId" resultType="com.qtone.util.dataStatistics.week.dto.SchoolWeekDataStatistics">
 
     SELECT
         sc.id schoolId,
@@ -124,5 +156,212 @@
     GROUP BY
         sc.id
 
+    </select>
+
+    <select id="getSchoolBindInfoByProvinceId" resultType="com.qtone.util.dataStatistics.month.dto.GuangDongDataStatistics">
+
+    SELECT t.* from
+    (
+            SELECT
+                sc.id provinceId,
+                sc.province_name provinceName,
+                sc.city_id cityId,
+                sc.city_name cityName,
+                sc.district_id districtId,
+                sc.district_name districtName,
+                sc.id schoolId,
+                sc.schoolName,
+                count(s.id) totalStudentNum ,
+                count(s.create_time &gt;= #{startTime} and s.create_time &lt; #{endTime} or null) studentNum,
+                count(LENGTH(s.send_time) &gt;= 10 or null) totalBindNum ,
+                count(s.send_time &gt;= #{startTime} and s.send_time &lt; #{endTime} or null) bindNum
+            FROM
+                student s
+                LEFT JOIN school sc ON s.school_id = sc.id
+                where s.is_deleted = 0 and school_id is not NULL and sc.province_id = #{provinceId}
+    GROUP BY
+        sc.id) t where t.totalBindNum>0
+
+
+    </select>
+
+    <select id="getSchoolUserNumByUserId" resultType="com.qtone.util.dataStatistics.month.dto.SchoolUserDto">
+    select  school_id schoolId,count(id) userNum from student where id in
+     <foreach collection="list" item="item" open="(" separator="," close=")" index="index">
+            #{item}
+        </foreach>
+        and school_id is not null
+        group by school_id
+</select>
+
+<select id="getStudentCardInfoByCityId" resultType="com.qtone.util.dataStatistics.month.dto.StudentCardInfo">
+SELECT
+	sc.province_name provinceName,
+	sc.city_name cityName,
+	sc.district_name districtName,
+	sc.schoolName,
+	s.id studentId,
+	s.studentName,
+	GROUP_CONCAT(DISTINCT p.parentName ) parentName,
+	GROUP_CONCAT(DISTINCT p.parentTel ) parentTel,
+	se.imei_phone imeiPhone,
+	s.send_time sendTime,
+	se.create_time createTime,
+	se.imei
+FROM
+	school sc
+	LEFT JOIN student s ON sc.id = s.school_id
+	LEFT JOIN student_extend se ON s.id = se.id
+	LEFT JOIN student_parent sp ON s.id = sp.student_id
+	LEFT JOIN parent p ON sp.parent_id = p.id
+WHERE
+	sc.city_id = #{cityId}
+	AND s.is_deleted = 0
+	and LENGTH(se.imei)>10
+GROUP BY
+	s.id
+ORDER BY
+	sc.id DESC
+</select>
+
+<select id="getThirdUserIdByUserId" resultType="com.qtone.util.dto.ThirdUserId">
+SELECT
+	user_id thirdUserId,
+	hdkt_user_id studentId,
+	user_name studentName,
+	hdkt_school_id hdktSchoolId
+FROM
+	third_user
+WHERE
+	user_id = #{userId}
+	AND hdkt_user_type = 2
+	AND is_deleted = 0
+	limit 1;
+</select>
+
+<select id="getSXBindInfo" resultType="com.qtone.util.dataStatistics.week.dto.SXBindInfo">
+SELECT
+	t2.province_name 'provinceName',
+	t2.city_name 'cityName',
+	t2.district_name 'districtName',
+	t2.schoolName 'schoolName',
+	se.imei_phone 'imeiPhone',
+	t4.parentTel 'parentTel',
+	se.create_time 'createTime',
+	t1.send_time 'sendTime',
+	se.imei 'imei',
+IF
+	( tt.last_time &gt;= '2023-06-01 00:00:00' and tt.last_time &lt; '2023-07-01 00:00:00', '是', '否' ) 'isActive'
+FROM
+	school t2
+	LEFT JOIN hdkt_prod.student t1 ON t1.school_id = t2.id
+	LEFT JOIN hdkt_prod.student_extend se ON se.id = t1.id
+	LEFT JOIN hdkt_prod.student_parent t3 ON t1.id = t3.student_id
+	LEFT JOIN hdkt_prod.parent t4 ON t3.parent_id = t4.id
+	LEFT JOIN hdkt_gps.terminal_phone tp ON se.id = tp.user_id
+	AND tp.user_type = 2
+	LEFT JOIN hdkt_gps.terminal tt ON tt.teno = tp.imei
+	WHERE
+	t2.province_id IN ( 3067, 3063 )
+	and t1.create_time &lt; "2023-07-01 00:00:00"
+</select>
+
+<select id="getStudentIdByImei" resultType="int">
+    select  id from student_extend where imei = #{imei} and is_deleted=0
+</select>
+
+<select id="getAttendanceInfo" resultType="com.qtone.util.dataStatistics.week.dto.AttendanceInfo">
+SELECT
+	sc.province_name provinceName,
+	sc.city_name cityName,
+	sc.district_name districtName,
+	sc.id schoolId,
+	sc.schoolName,
+	count(DISTINCT s.id) bindNum,
+	GROUP_CONCAT(DISTINCT kd.name) deviceName
+FROM
+	school sc
+	LEFT JOIN hdkt_safe_prod.kq_device kd on sc.id =kd.school_id
+	LEFT JOIN student s on sc.id = s.school_id and LENGTH(s.send_time)>1
+WHERE
+	sc.province_id = #{provinceId}
+	and sc.is_deleted=0
+	and kd.is_deleted=0
+	and kd.is_used =1
+	GROUP BY sc.id
+</select>
+
+<select id="getTerminalPhoneListBySchoolId" resultMap="TerminalPhoneMap">
+    SELECT
+        p.id,
+        p.user_id,
+        p.user_type,
+        p.user_name,
+        p.user_tel,
+        p.user_tel_mask,
+        p.card_type,
+        p.card_status,
+        p.send_time,
+        p.card_num,
+        p.imei,
+        p.iccid,
+        p.phone,
+        p.school_id,
+        p.school_name,
+        p.province_id,
+        p.province_name,
+        p.city_id,
+        p.city_name,
+        p.district_id,
+        p.district_name,
+        p.class_id,
+        p.class_name,
+        p.grade_id,
+        p.grade_name
+    FROM
+        terminal_phone p
+    WHERE
+    school_id in
+    <foreach collection="schoolIds" item="item" separator="," open="(" close=")">
+        #{item}
+    </foreach>
+        AND is_deleted = 0
+</select>
+<select id="getStudentNum" resultType="int">
+    SELECT
+        count( DISTINCT s.id )
+    FROM
+        student s
+        LEFT JOIN school sc ON s.school_id = sc.id
+    WHERE
+        s.is_deleted = 0
+        <if test="startTime!=null">
+            AND s.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime!=null">
+            AND s.create_time  &lt; #{endTime}
+        </if>
+        <if test="provinceId!=null">
+            AND sc.province_id = #{provinceId}
+        </if>
+        AND sc.is_deleted = 0
+</select>
+
+<select id="getSchoolList" resultType="com.qtone.util.dto.SchoolKqInfo">
+    SELECT
+        sc.id schoolId,
+        schoolName,
+        province_name provinceName,
+        city_name cityName,
+        district_name districtName
+    FROM
+        school sc
+    WHERE
+        sc.province_id =#{provinceId}
+        AND sc.is_deleted =0
+</select>
+
+    <select id="getStudentIdByClassId" resultType="int">
+        SELECT id from student where classId = 11486402 and is_deleted=0;
     </select>
 </mapper>

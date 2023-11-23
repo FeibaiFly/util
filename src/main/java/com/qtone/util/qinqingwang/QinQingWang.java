@@ -6,7 +6,7 @@ import com.qtone.util.PoiUtil;
 import com.qtone.util.StringUtils;
 import com.qtone.util.dao.prod.ProdUcMapper;
 import com.qtone.util.dao.test.TestUcMapper;
-import com.qtone.util.mpAes.MpAesUtil;
+import com.qtone.util.mpAes.MpAesUtilTest;
 import com.qtone.util.qinqingwang.entity.FamilyPhoneMemberRecord;
 import com.qtone.util.qinqingwang.entity.GSFamilyGroupMember;
 import com.qtone.util.qinqingwang.entity.GsCardOrderInfo;
@@ -22,9 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 public class QinQingWang {
@@ -46,15 +44,15 @@ public class QinQingWang {
         List<String> encodePhones = new ArrayList<>();
         for (String[] value : values) {
             phones.add(value[1]);
-            encodePhones.add(MpAesUtil.encode(value[1]));
+            encodePhones.add(MpAesUtilTest.encode(value[1]));
         }
         String batchNumber = DateUtils.formatDateTime(new Date());
         List<FamilyPhoneMemberRecord> bindPhones = prodUcMapper.getBindImeiPhone(encodePhones);
 
         Map<String,FamilyPhoneMemberRecord> bindPhoneMap = new HashMap<>();
         for(FamilyPhoneMemberRecord phoneMemberRecord: bindPhones) {
-            String imeiPhone = MpAesUtil.decode(phoneMemberRecord.getImeiPhone());
-            String familyPhone = MpAesUtil.decode(phoneMemberRecord.getFamilyPhone());
+            String imeiPhone = MpAesUtilTest.decode(phoneMemberRecord.getImeiPhone());
+            String familyPhone = MpAesUtilTest.decode(phoneMemberRecord.getFamilyPhone());
             phoneMemberRecord.setImeiPhone(imeiPhone);
             phoneMemberRecord.setFamilyPhone(familyPhone);
             bindPhoneMap.put(imeiPhone,phoneMemberRecord);

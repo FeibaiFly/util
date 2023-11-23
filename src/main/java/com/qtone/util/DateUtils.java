@@ -763,6 +763,13 @@ public class DateUtils {
 		date=calendar.getTime();
 		return date;
 	}
+	public static Date addMonth(Date date, int monty){
+		Calendar   calendar   =   new   GregorianCalendar();
+		calendar.setTime(date);
+		calendar.add(calendar.MONTH,monty);
+		date=calendar.getTime();
+		return date;
+	}
 
 	public static Date addYear(Date date, int yearNum){
 		Calendar   calendar   =   new   GregorianCalendar();

@@ -1,4 +1,4 @@
-package com.qtone.util.weeklyData;
+package com.qtone.util.dataStatistics.week.dto;
 
 import lombok.Data;
 

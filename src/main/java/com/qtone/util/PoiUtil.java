@@ -1,5 +1,6 @@
 package com.qtone.util;
 
+import com.qtone.util.dataStatistics.week.dto.SXBindInfo;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -113,7 +114,183 @@ public class PoiUtil {
         }
     }
 
+    /**
+     * 导出Excel
+     * @param fileName 文件名（不需要后缀）
+     * @param sheetName   sheet名称
+     * @param headers 表头（数组）
+     * @param list<T>    导出的数据（T为entity，不需要序列化，属性个数和顺序要和headers一一对应）
+     * @param
+     */
+    public static <T> void createExcel(String fileName, String sheetName, String[] headers, List<?> list) throws Exception {
+        HSSFWorkbook workbook = null;
+        OutputStream out =null;
+        try {
+            workbook = new HSSFWorkbook();
+            HSSFSheet sheet = workbook.createSheet(sheetName);
+            sheet.setDefaultColumnWidth(15);
+            HSSFCellStyle style = workbook.createCellStyle();
+            HSSFFont font = workbook.createFont();
+            style.setFont(font);
+            HSSFRow row = sheet.createRow(0);
+            setHeaders(style, headers, row);
+            //迭代数据
+            Iterator<?> iterator = list.iterator();
+            int index = 0;
+            while (iterator.hasNext()) {
+                index++;
+                row = sheet.createRow(index);
+                T entityBean = (T) iterator.next();
+                Field[] fields = entityBean.getClass().getDeclaredFields();
+                //反射获得所有列
+                for (int i = 0; i < fields.length; i++) {
+                    HSSFCell cell = row.createCell(i);
+                    Field field = fields[i];
+                    String fieldName = field.getName();
+                    String getMethodName = "get".concat(fieldName.substring(0, 1).toUpperCase()).concat(fieldName.substring(1));
+                    Class<? extends Object> classObject = entityBean.getClass();
+                    Method getMethod = classObject.getMethod(getMethodName, new Class[]{});
+                    Object value = getMethod.invoke(entityBean, new Object[]{});
+                    value = value == null ? "" : value;
+                    cell.setCellValue(value.toString());
+                }
+            }
+            out = new FileOutputStream(fileName);
+            workbook.write(out);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        }
+    }
 
+
+    public static <T> void createExcelXlsx(String fileName, String sheetName, String[] headers, List<?> list) throws Exception {
+        XSSFWorkbook workbook = null;
+        OutputStream out =null;
+        try {
+            workbook = new XSSFWorkbook();
+            XSSFSheet sheet = workbook.createSheet(sheetName);
+            sheet.setDefaultColumnWidth(15);
+            XSSFCellStyle style = workbook.createCellStyle();
+            XSSFFont font = workbook.createFont();
+            style.setFont(font);
+            XSSFRow row = sheet.createRow(0);
+            setXlsxHeaders(style, headers, row,workbook);
+            //迭代数据
+            Iterator<?> iterator = list.iterator();
+            int index = 0;
+            while (iterator.hasNext()) {
+                index++;
+                row = sheet.createRow(index);
+                T entityBean = (T) iterator.next();
+                Field[] fields = entityBean.getClass().getDeclaredFields();
+                //反射获得所有列
+                for (int i = 0; i < fields.length; i++) {
+                    XSSFCell cell = row.createCell(i);
+                    Field field = fields[i];
+                    String fieldName = field.getName();
+                    String getMethodName = "get".concat(fieldName.substring(0, 1).toUpperCase()).concat(fieldName.substring(1));
+                    Class<? extends Object> classObject = entityBean.getClass();
+                    Method getMethod = classObject.getMethod(getMethodName, new Class[]{});
+                    Object value = getMethod.invoke(entityBean, new Object[]{});
+                    value = value == null ? "" : value;
+                    cell.setCellValue(value.toString());
+                }
+            }
+            out = new FileOutputStream(fileName);
+            workbook.write(out);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        }
+    }
+
+
+    /**
+     * xlsx格式导出
+     * @author:zhangpk
+     * @Description:
+     * @param null:
+     * @return:
+     * @date: 2023/5/9 13:35
+     */
+
+    public static <T> void exportXlsx(String fileName, String sheetName, String[] headers, List<?> list) throws Exception {
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        OutputStream out =null;
+        try {
+            XSSFSheet  sheet = workbook.createSheet(sheetName);
+            sheet.setDefaultColumnWidth(15);
+            XSSFCellStyle style = workbook.createCellStyle();
+            XSSFFont font = workbook.createFont();
+            style.setFont(font);
+//            HSSFRow row0 = sheet.createRow(0);
+//            HSSFCell cell0 = row0.createCell(0);
+//            cell0.setCellValue("数据如下");
+            XSSFRow row = sheet.createRow(0);
+            setXlsxHeaders(style, headers, row, workbook);
+            //迭代数据
+            Iterator<?> iterator = list.iterator();
+            int index = 0;
+            while (iterator.hasNext()) {
+                index++;
+                row = sheet.createRow(index);
+                T entityBean = (T) iterator.next();
+                Field[] fields = entityBean.getClass().getDeclaredFields();
+                //反射获得所有列
+                for (int i = 0; i < fields.length; i++) {
+                    XSSFCell cell = row.createCell(i);
+                    Field field = fields[i];
+                    String fieldName = field.getName();
+                    String getMethodName = "get".concat(fieldName.substring(0, 1).toUpperCase()).concat(fieldName.substring(1));
+                    Class<? extends Object> classObject = entityBean.getClass();
+                    Method getMethod = classObject.getMethod(getMethodName, new Class[]{});
+                    Object value = getMethod.invoke(entityBean, new Object[]{});
+                    value = value == null ? "" : value;
+                    cell.setCellValue(value.toString());
+                }
+            }
+            out = new FileOutputStream(fileName);
+            workbook.write(out);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        }
+    }
+
+    private static void setXlsxHeaders(CellStyle commonWrapStyle, String[] headers, XSSFRow row2,XSSFWorkbook workbook) {
+        for (int i = 0; i < headers.length; i++) {
+            XSSFCell cell = row2.createCell(i);
+            XSSFCellStyle style = workbook.createCellStyle();
+
+            cell.setCellStyle(style);
+
+            XSSFRichTextString text = new XSSFRichTextString(headers[i]);
+            cell.setCellValue(text);
+        }
+    }
     private static void setHeaders(CellStyle commonWrapStyle, String[] headers, HSSFRow row2) {
         for (int i = 0; i < headers.length; i++) {
             HSSFCell cell = row2.createCell(i);
@@ -468,4 +645,17 @@ public class PoiUtil {
 		}
 		return null;
 	}
+
+    public static void main(String[] args) throws Exception {
+        String filePath = "D:\\Deskop\\周报\\陕周数据.xlsx";
+        List<SXBindInfo> bindInfos = new ArrayList<>();
+        for(int i=0;i<100000;i++){
+            SXBindInfo bindInfo = new SXBindInfo();
+            bindInfo.setProvinceName(i+"");
+            bindInfos.add(bindInfo);
+        }
+        String[] header = {"省", "市", "区", "学校名称", "插卡手号码", "家长手机", "初次绑卡时间", "绑卡时间","imei", "是否活跃"};
+        String fileName = "周报数据";
+        PoiUtil.exportXlsx(filePath, fileName, header, bindInfos);
+    }
 }

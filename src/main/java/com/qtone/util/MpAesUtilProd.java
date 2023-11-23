@@ -4,31 +4,97 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class MpAesUtil2 {
+public class MpAesUtilProd {
 
     private final static String aesKey = "bf74bbdb266b065b";
 
     private  final static String vipara="9cc38de7234b4ec5";
     
     public static void main(String[] args){
-    	String sourceFile ="C:\\Users\\17272\\Desktop\\运营支撑脚本\\source.txt";
-    	String targetFile = "C:\\Users\\17272\\Desktop\\运营支撑脚本\\result.txt";
+    	String sourceFile ="D:\\Deskop\\智学互动\\source.txt";
+    	String targetFile = "D:\\Deskop\\智学互动\\result.txt";
     	String catchFile = "C:\\Users\\17272\\Desktop\\运营支撑脚本\\陕西活跃imei号.txt";
     	readTxtFile(sourceFile,targetFile);
 //        catchWord(sourceFile,catchFile,targetFile);
-//        String phone = "18392741618";
-//        phone = encode(phone);
-//        System.out.println(phone);
+//        try {
+//            fileNotExistImeiAndAdd();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
-    
+
+    public static void fileNotExistImei() throws Exception {
+        String file1path ="D:\\Deskop\\智学互动\\江苏历史imei.txt";
+        String file2path = "D:\\Deskop\\智学互动\\苏州当前绑卡.txt";
+        File file1 = new File(file1path);
+        File file2 = new File(file2path);
+        List<String> historyImei = new ArrayList<>();
+        List<String> nowImei = new ArrayList<>();
+        if(file1.isFile() && file1.exists()) { //判断文件是否存在
+            InputStreamReader read = new InputStreamReader(new FileInputStream(file1), "UTF-8");//考虑到编码格式
+            BufferedReader bufferedReader = new BufferedReader(read);
+            String lineTxt = null;
+            while ((lineTxt = bufferedReader.readLine()) != null) {
+                historyImei.add(lineTxt);
+            }
+            read.close();
+        }
+
+        if(file2.isFile() && file2.exists()) { //判断文件是否存在
+            InputStreamReader read = new InputStreamReader(new FileInputStream(file2), "UTF-8");//考虑到编码格式
+            BufferedReader bufferedReader = new BufferedReader(read);
+            String lineTxt = null;
+            while ((lineTxt = bufferedReader.readLine()) != null) {
+                nowImei.add(lineTxt);
+            }
+            read.close();
+        }
+
+        nowImei.removeAll(historyImei);
+        System.out.println(nowImei);
+    }
+
+    public static void fileNotExistImeiAndAdd() throws Exception {
+        String file1path ="D:\\Deskop\\智学互动\\江苏历史imei.txt";
+        String file2path = "D:\\Deskop\\智学互动\\苏州当前绑卡.txt";
+    	String targetFile = "D:\\Deskop\\智学互动\\result.txt";
+        File file1 = new File(file1path);
+        File file2 = new File(file2path);
+        List<String> historyImei = new ArrayList<>();
+        List<String> nowImei = new ArrayList<>();
+        if(file1.isFile() && file1.exists()) { //判断文件是否存在
+            InputStreamReader read = new InputStreamReader(new FileInputStream(file1), "UTF-8");//考虑到编码格式
+            BufferedReader bufferedReader = new BufferedReader(read);
+            String lineTxt = null;
+            while ((lineTxt = bufferedReader.readLine()) != null) {
+                historyImei.add(lineTxt);
+            }
+            read.close();
+        }
+
+        if(file2.isFile() && file2.exists()) { //判断文件是否存在
+            InputStreamReader read = new InputStreamReader(new FileInputStream(file2), "UTF-8");//考虑到编码格式
+            BufferedReader bufferedReader = new BufferedReader(read);
+            String lineTxt = null;
+            while ((lineTxt = bufferedReader.readLine()) != null) {
+                nowImei.add(lineTxt);
+            }
+            read.close();
+        }
+        StringBuffer sb = new StringBuffer();
+        for(String imei: nowImei){
+            if(!historyImei.contains(imei)){
+                sb.append(imei+ "\r\n");
+            }
+        }
+        writeTxtFile(file1path,sb);
+    }
+
+
     public static void readTxtFile(String sourceFile,String targetFile){
     	try {
             File file1 = new File(sourceFile);
@@ -42,18 +108,23 @@ public class MpAesUtil2 {
                 		String [] arr = lineTxt.split(",");
                 		for(int i=0;i< arr.length;i++){
                 		    String str = arr[i];
-                		    if(str.contains("_")) {
-                                 String[] str2 = str.split("_");
-                                 for(int j=0;j<str2.length;j++) {
-                                     if(j==str2.length-1) {
-                                         sb.append(decode(decode(str2[j])) + ",");
-                                     }else {
-                                         sb.append(decode(decode(str2[j])) + "_");
-                                     }
-                                 }
-                                 continue;
+//                		    if(str.contains("_")) {
+//                                 String[] str2 = str.split("_");
+//                                 for(int j=0;j<str2.length;j++) {
+//                                     if(j==str2.length-1) {
+//                                         sb.append(decode(decode(str2[j])) + ",");
+//                                     }else {
+//                                         sb.append(decode(decode(str2[j])) + "_");
+//                                     }
+//                                 }
+//                                 continue;
+//                            }
+                            if(i==0){
+                                sb.append(decode(str)+",");
+                            }else {
+                                sb.append(str+",");
                             }
-                            sb.append(decode(decode(arr[i])) + ",");
+//                            sb.append(decode(decode(arr[i])) + ",");
                         }
                 		sb.append("\r\n");
                 	} else {

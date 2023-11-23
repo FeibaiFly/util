@@ -1,4 +1,4 @@
-package com.qtone.util.weeklyData;
+package com.qtone.util.dataStatistics;
 
 import lombok.Data;
 
@@ -7,6 +7,8 @@ import lombok.Data;
  */
 @Data
 public class CardOrderRequest {
+
+    private Integer provinceId;
 
     /**
      * 开始时间
@@ -17,8 +19,9 @@ public class CardOrderRequest {
      */
     private String endTime;
 
-    private String appKey;
-    //1按日统计，2按传入的开始时间结束时间统计
-    private Integer type;
+    /**
+     * 导出的文件路径
+     */
+    private String filePath;
 
 }

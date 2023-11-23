@@ -1,4 +1,4 @@
-package com.qtone.util.weeklyData;
+package com.qtone.util.dataStatistics.week.dto;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;

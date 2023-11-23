@@ -16,10 +16,10 @@ import java.util.Base64;
  */
 @Slf4j
 @Component
-public class MpAesUtil {
+public class MpAesUtilTest {
 
-    private static String aesKey="bf74bbdb266b065b";
-    private static String vipara="9cc38de7234b4ec5";
+    private static String aesKey="187b965e04f54d60";
+    private static String vipara="f939ea0a8e885775";
 
 
     /*
@@ -77,6 +77,11 @@ public class MpAesUtil {
             log.error("sql解密错误：",e);
         }
         return content;
+    }
+
+    public static void main(String[] args) {
+        String str = "rvp1VlaBipJpLYBVFXOwTdEmlnVDSEPO670GaRHP8nqVVeshfXYETnsaMXyIJ3WpatkcWtsIyD8ksvyMjq7mSa332GDQGcAPMo1vz51PJ9sgshLhDRuKU1Fq60o55eYEqgpuYdNVEK8QxANZvVrzENuVUElW/3TQjfdQYSG/FdxlF1itpXgc6mdcwJHrgQJUHXk2NXlo3OQvwOH7R5740HgSKdLbjJ1eD09AjiTSvBOU78tvkMAjxmTWkEQtHypMRQmsk01Y/B6VmadrwqmYx0qGuLbrFxxtEtLoaqcpdC4AOS0l25dyI3x0hL8EK06F33OpTsPtl+/63GD+cBPgQEV1E0PG3C2WmqZhdmxQruhDEjdtfvlgk3xJEn4DuAMfyo5UwozfgOk9pekHEC4sqw==";
+        System.out.println(decode(str));
     }
 
 }

@@ -1,15 +1,15 @@
 package com.qtone.util.saveSchool;
 
 import com.alibaba.fastjson.JSONObject;
+import com.qtone.util.MpAesUtilProd;
 import com.qtone.util.PoiUtil;
 import com.qtone.util.StringUtils;
 import com.qtone.util.dao.prod.ProdUcMapper;
 import com.qtone.util.dao.test.TestUcMapper;
-import com.qtone.util.mpAes.MpAesUtil;
+import com.qtone.util.dataStatistics.week.dto.BindInfo;
 import com.qtone.util.saveSchool.dto.HdktSchool;
 import com.qtone.util.saveSchool.dto.HdktSchoolTemplate;
 import com.qtone.util.saveSchool.dto.SchoolArea;
-import com.qtone.util.updateOrder.dto.HandleOnlineV1Request;
 import com.qtone.util.zxx.util.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,5 +141,33 @@ public class SaveSchoolController {
             return "无";
         }
         return sw;
+    }
+
+
+
+    public static void main(String[] args) throws Exception {
+        String fileName = "D:\\Deskop\\江苏绑卡学生信息.xlsx";
+        String outfileName = "D:\\Deskop\\江苏绑卡学生信息2.xlsx";
+        File file = new File(fileName);
+        List<String[]> files = PoiUtil.readExcel(file,11);
+        List<BindInfo> bindInfos = new ArrayList<>();
+        for(int i=0;i<files.size();i++){
+            BindInfo bindInfo = new BindInfo();
+            bindInfo.setProvinceName(files.get(i)[0]);
+            bindInfo.setCityName(files.get(i)[1]);
+            bindInfo.setDistrictName(files.get(i)[2]);
+            bindInfo.setSchoolName(files.get(i)[3]);
+            bindInfo.setParentTel(MpAesUtilProd.decode(files.get(i)[4]));
+            bindInfo.setImeiPhone(MpAesUtilProd.decode(files.get(i)[5]));
+            bindInfo.setImei(files.get(i)[6]);
+            bindInfo.setRfid(files.get(i)[7]);
+            bindInfo.setCreateTime(files.get(i)[8]);
+            bindInfo.setSendTime(files.get(i)[9]);
+            bindInfo.setIsActive(files.get(i)[10]);
+            bindInfos.add(bindInfo);
+        }
+        String[] header = {"省", "市", "区", "学校名称", "家长手机","插卡手号码","imei","rfid",  "初次绑卡时间", "绑卡时间", "是否活跃"};
+        PoiUtil.createExcelXlsx(outfileName, "xxxx", header, bindInfos);
+
     }
 }

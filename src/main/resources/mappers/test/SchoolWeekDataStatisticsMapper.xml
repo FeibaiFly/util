@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qtone.util.dao.test.SchoolWeekDataStatisticsMapper">
-  <resultMap id="BaseResultMap" type="com.qtone.util.weeklyData.SchoolWeekDataStatistics">
+  <resultMap id="BaseResultMap" type="com.qtone.util.dataStatistics.week.dto.SchoolWeekDataStatistics">
     <!--@mbg.generated-->
     <!--@Table SchoolWeekDataStatistics-->
     <id column="id" jdbcType="INTEGER" property="id" />
@@ -40,7 +40,7 @@
   where school_id = #{schoolId} limit 1
 </select>
 
-<insert id="insertData" parameterType="com.qtone.util.weeklyData.SchoolWeekDataStatistics" >
+<insert id="insertData" parameterType="com.qtone.util.dataStatistics.week.dto.SchoolWeekDataStatistics" >
     insert into SchoolWeekDataStatistics (id, province_name, city_name,
       district_name, school_id, school_name,
       total_student_num, student_num, total_bind_num,
@@ -59,7 +59,7 @@
       )
   </insert>
 
-  <update id="updateByPrimaryKey" parameterType="com.qtone.util.weeklyData.SchoolWeekDataStatistics" >
+  <update id="updateByPrimaryKey" parameterType="com.qtone.util.dataStatistics.week.dto.SchoolWeekDataStatistics" >
     update SchoolWeekDataStatistics
     set province_name = #{provinceName,jdbcType=VARCHAR},
       city_name = #{cityName,jdbcType=VARCHAR},

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtone.util.dao.test.SchoolMonthDataStatisticsMapper">
+  <resultMap id="BaseResultMap" type="com.qtone.util.dataStatistics.month.dto.SchoolMonthDataStatistics">
+   <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="month" property="month" jdbcType="INTEGER" />
+    <result column="province_id" property="provinceId" jdbcType="INTEGER" />
+    <result column="province_name" property="provinceName" jdbcType="VARCHAR" />
+    <result column="city_id" property="cityId" jdbcType="INTEGER" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="district_id" property="districtId" jdbcType="INTEGER" />
+    <result column="district_name" property="districtName" jdbcType="VARCHAR" />
+    <result column="total_student_num" property="totalStudentNum" jdbcType="INTEGER" />
+    <result column="student_num" property="studentNum" jdbcType="INTEGER" />
+    <result column="total_bind_num" property="totalBindNum" jdbcType="INTEGER" />
+    <result column="bind_num" property="bindNum" jdbcType="INTEGER" />
+    <result column="total_call_num" property="totalCallNum" jdbcType="INTEGER" />
+    <result column="call_num" property="callNum" jdbcType="INTEGER" />
+    <result column="call_user_num" property="callUserNum" jdbcType="INTEGER" />
+    <result column="total_call_duration" property="totalCallDuration" jdbcType="INTEGER" />
+    <result column="call_duration" property="callDuration" jdbcType="INTEGER" />
+    <result column="total_request_location_num" property="totalRequestLocationNum" jdbcType="INTEGER" />
+    <result column="request_location_num" property="requestLocationNum" jdbcType="INTEGER" />
+    <result column="request_location_user_num" property="requestLocationUserNum" jdbcType="INTEGER" />
+    <result column="total_sos_alarm_num" property="totalSosAlarmNum" jdbcType="INTEGER" />
+    <result column="sos_alarm_num" property="sosAlarmNum" jdbcType="INTEGER" />
+    <result column="sos_alarm_user_num" property="sosAlarmUserNum" jdbcType="INTEGER" />
+    <result column="total_regional_alarm_num" property="totalRegionalAlarmNum" jdbcType="INTEGER" />
+    <result column="regional_alarm_num" property="regionalAlarmNum" jdbcType="INTEGER" />
+    <result column="report_location_num" property="reportLocationNum" jdbcType="INTEGER" />
+    <result column="un_bind_num" property="unBindNum" jdbcType="INTEGER" />
+    <result column="bind_rate" property="bindRate" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, month, province_id, province_name, city_id, city_name, district_id, district_name,
+    total_student_num, student_num, total_bind_num, bind_num, total_call_num, call_num, 
+    call_user_num, total_call_duration, call_duration, total_request_location_num, request_location_num, 
+    request_location_user_num, total_sos_alarm_num, sos_alarm_num, sos_alarm_user_num, 
+    total_regional_alarm_num, regional_alarm_num, report_location_num, un_bind_num, bind_rate, 
+    create_time, update_time
+  </sql>
+
+<delete id="deleteByMonth">
+    delete  from SchoolMonthDataStatistics where month = #{month}
+</delete>
+
+<insert id="insertData" parameterType="com.qtone.util.dataStatistics.month.dto.SchoolMonthDataStatistics">
+   insert into SchoolMonthDataStatistics (month, province_id,
+      province_name, city_id, city_name,
+      district_id, district_name, total_student_num,
+      student_num, total_bind_num, bind_num,
+      total_call_num, call_num, call_user_num,
+      total_call_duration, call_duration, total_request_location_num,
+      request_location_num, request_location_user_num,
+      total_sos_alarm_num, sos_alarm_num, sos_alarm_user_num,
+      total_regional_alarm_num, regional_alarm_num,
+      report_location_num, un_bind_num, bind_rate)
+    values ( #{month,jdbcType=INTEGER}, #{provinceId,jdbcType=INTEGER},
+      #{provinceName,jdbcType=VARCHAR}, #{cityId,jdbcType=INTEGER}, #{cityName,jdbcType=VARCHAR},
+      #{districtId,jdbcType=INTEGER}, #{districtName,jdbcType=VARCHAR}, #{totalStudentNum,jdbcType=INTEGER},
+      #{studentNum,jdbcType=INTEGER}, #{totalBindNum,jdbcType=INTEGER}, #{bindNum,jdbcType=INTEGER},
+      #{totalCallNum,jdbcType=INTEGER}, #{callNum,jdbcType=INTEGER}, #{callUserNum,jdbcType=INTEGER},
+      #{totalCallDuration,jdbcType=INTEGER}, #{callDuration,jdbcType=INTEGER}, #{totalRequestLocationNum,jdbcType=INTEGER},
+      #{requestLocationNum,jdbcType=INTEGER}, #{requestLocationUserNum,jdbcType=INTEGER},
+      #{totalSosAlarmNum,jdbcType=INTEGER}, #{sosAlarmNum,jdbcType=INTEGER}, #{sosAlarmUserNum,jdbcType=INTEGER},
+      #{totalRegionalAlarmNum,jdbcType=INTEGER}, #{regionalAlarmNum,jdbcType=INTEGER},
+      #{reportLocationNum,jdbcType=INTEGER}, #{unBindNum,jdbcType=INTEGER}, #{bindRate,jdbcType=VARCHAR})
+  </insert>
+
+<select id="getByCityIdMonth" resultMap="BaseResultMap">
+    select  * from SchoolMonthDataStatistics where month = #{month} and city_id = #{cityId} limit 1;
+</select>
+
+<select id="getGuangDongMonthData">
+SELECT
+	city_name,
+	total_student_num,
+	student_num,
+	total_bind_num,
+	bind_num,
+	total_call_num,
+	call_num,
+	call_user_num,
+	CEILING(total_call_duration/60) total_call_duration,
+	CEILING(call_duration/60) call_duration,
+	total_request_location_num,
+	request_location_num,
+	request_location_user_num,
+	total_sos_alarm_num,
+	sos_alarm_num,
+	sos_alarm_user_num,
+	total_regional_alarm_num,
+	regional_alarm_num,
+	report_location_num,
+	un_bind_num,
+	bind_rate
+FROM
+	SchoolMonthDataStatistics
+	where month = #{month}
+</select>
+
+</mapper>

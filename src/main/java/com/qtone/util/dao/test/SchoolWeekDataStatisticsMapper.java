@@ -1,7 +1,6 @@
 package com.qtone.util.dao.test;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.qtone.util.weeklyData.SchoolWeekDataStatistics;
+import com.qtone.util.dataStatistics.week.dto.SchoolWeekDataStatistics;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

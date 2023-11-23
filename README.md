@@ -1,6 +1,25 @@
-# 工程简介
-
-
-
-# 延伸阅读
-
+-- 获取广东月报数据
+SELECT
+	city_name,
+	total_student_num,
+	student_num,
+	total_bind_num,
+	bind_num,
+	total_call_num,
+	call_num,
+	call_user_num,
+	CEILING(total_call_duration/60),
+	CEILING(call_duration/60),
+	total_request_location_num,
+	request_location_num,
+	request_location_user_num,
+	total_sos_alarm_num,
+	sos_alarm_num,
+	sos_alarm_user_num,
+	total_regional_alarm_num,
+	regional_alarm_num,
+	report_location_num,
+	un_bind_num,
+	bind_rate
+FROM
+	SchoolMonthDataStatistics 

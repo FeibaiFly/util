@@ -42,6 +42,25 @@ VALUES
 </select>
 
 <insert id="insertOrderRequest">
-INSERT INTO `order_request`(`gtid`, `paramString`) VALUES (#{gtid}, #{paramString});
+INSERT INTO `order_request`(`gtid`) VALUES (#{gtid});
 </insert>
+
+<select id="getStudentCardInfo" resultType="com.qtone.util.dto.ThirdStudentCardInfo">
+SELECT
+	tu.user_id thirdUserId,
+	s.id studentId,
+	s.school_id schoolId,
+	se.imei,
+	se.imei_phone imeiPhone,
+	s.cardNum
+FROM
+	student s
+	LEFT JOIN student_extend se ON s.id = se.id
+	LEFT JOIN third_user tu ON s.id = tu.hdkt_user_id
+	AND tu.hdkt_user_type = 2
+WHERE
+	s.school_id = 400043557
+	AND s.is_deleted = 0
+	AND tu.is_deleted = 0
+</select>
 </mapper>

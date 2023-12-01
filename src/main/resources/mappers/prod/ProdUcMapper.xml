@@ -362,6 +362,41 @@ WHERE
 </select>
 
     <select id="getStudentIdByClassId" resultType="int">
-        SELECT id from student where classId = 11486402 and is_deleted=0;
+        SELECT id from student where classId = #{classId} and is_deleted=0;
     </select>
+
+    <select id="getBindImei" resultType="com.qtone.util.dto.ImeiAreaInfo">
+       SELECT
+	se.imei,
+	sc.province_name provinceName,
+	sc.city_name cityName,
+	sc.district_name districtName,
+	(CASE t2.tesoftver
+WHEN '#TELPO#1.2.6#SQ.0.2' THEN '天波'
+WHEN '#TELPO#1.2.6#WQ.0.4' THEN '天波'
+WHEN '#site#170' THEN '思特'
+WHEN '#kaer#1.0.0#K.0.1' THEN '卡尔'
+WHEN '#KE#KT27S' THEN '卡尔'
+WHEN '#TY#F98' THEN '武汉天喻' else fa.company_name
+end
+) factoryName,
+(CASE t2.tesoftver
+WHEN '#TELPO#1.2.6#SQ.0.2' THEN 'TPS401'
+WHEN '#TELPO#1.2.6#WQ.0.4' THEN 'TPS401'
+WHEN '#site#170' THEN 'c98'
+WHEN '#kaer#1.0.0#K.0.1' THEN 'K98'
+WHEN '#KE#KT27S' THEN 'KT27S'
+WHEN '#TY#F98' THEN 'F98' else mo.model
+end
+) deviceTypeName
+FROM
+	student_extend se
+	LEFT JOIN student s ON se.id = s.id
+	LEFT JOIN school sc ON s.school_id = sc.id
+	LEFT JOIN device_card_factory fa ON se.imei = fa.imei
+	LEFT JOIN dict_device_model mo on fa.model_id = mo.id
+	left join hdkt_gps.terminal_phone tp on s.id  = tp.user_id  and tp.user_type =2
+	left join hdkt_gps.terminal t2 on tp.imei = t2.teno
+	where sc.province_id = #{provinceId} and LENGTH(se.imei)>2 and s.is_deleted=0
+</select>
 </mapper>

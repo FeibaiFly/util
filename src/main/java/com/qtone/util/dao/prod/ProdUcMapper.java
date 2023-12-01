@@ -5,6 +5,7 @@ import com.qtone.util.dataStatistics.month.dto.SchoolUserDto;
 import com.qtone.util.dataStatistics.month.dto.StudentCardInfo;
 import com.qtone.util.dataStatistics.week.dto.AttendanceInfo;
 import com.qtone.util.dataStatistics.week.dto.SXBindInfo;
+import com.qtone.util.dto.ImeiAreaInfo;
 import com.qtone.util.dto.SchoolKqInfo;
 import com.qtone.util.dto.TerminalPhone;
 import com.qtone.util.dto.ThirdUserId;
@@ -55,4 +56,6 @@ public interface ProdUcMapper {
     List<SchoolKqInfo> getSchoolList(@Param("provinceId") Integer provinceId);
 
     List<Integer> getStudentIdByClassId(@Param("classId") Integer classId);
+
+    List<ImeiAreaInfo> getBindImei(@Param("provinceId") Integer provinceId);
 }

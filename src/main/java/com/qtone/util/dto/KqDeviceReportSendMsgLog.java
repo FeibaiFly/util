@@ -45,5 +45,7 @@ public class KqDeviceReportSendMsgLog {
     //发送内容
     private String sendMsg;
 
+    private String dataId;
+
 
 }

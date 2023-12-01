@@ -3,6 +3,7 @@ package com.qtone.util;
 import com.mongodb.Mongo;
 import com.qtone.util.config.mongo.MiddlewareMongoConfig;
 import com.qtone.util.dao.prod.ProdUcMapper;
+import com.qtone.util.dto.ImeiAreaInfo;
 import com.qtone.util.dto.SchoolKqInfo;
 import com.qtone.util.dto.TelNumInfo;
 import org.junit.Test;
@@ -19,9 +20,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -75,24 +74,34 @@ public class StaticsDataTests {
         Query query = new Query();
         Criteria criteria = new Criteria();
         criteria.and("provinceId").is(provinceId);
-        List<String> imeis = middlewareMongoTemplate.findDistinct(query,"imei","bindCardLog",String.class);
+        query.addCriteria(criteria);
+        List<ImeiAreaInfo> imeis = middlewareMongoTemplate.find(query,ImeiAreaInfo.class,"bindCardLog");
+        List<ImeiAreaInfo> bindImeis = prodUcMapper.getBindImei(provinceId);
+        imeis.addAll(bindImeis);
+        Map<String,String> imeiMap = new HashMap<>();
+        for(ImeiAreaInfo imei:imeis){
+            imeiMap.put(imei.getImei(),imei.toString());
+        }
+        List<String> list = new ArrayList<>(imeiMap.values());
         String filePath = "D:\\Deskop\\智学互动\\imei.txt";
-        writeTxtFile(filePath,imeis);
+        writeTxtFile(filePath, list);
     }
 
     @Test
     public void getSchoolKqNum() throws IOException {
         Integer provinceId = 3191;
-        List<SchoolKqInfo> schoolList = prodUcMapper.getSchoolList(provinceId);
 
 
         Query query = new Query();
         Criteria criteria = new Criteria();
         criteria.and("provinceId").is(provinceId);
+        query.addCriteria(criteria);
         List<String> imeis = middlewareMongoTemplate.findDistinct(query,"imei","bindCardLog",String.class);
         String filePath = "D:\\Deskop\\智学互动\\imei.txt";
         writeTxtFile(filePath,imeis);
     }
+
+
 
     private static void writeTxtFile(String filePath, List<String> textList) throws IOException {
 

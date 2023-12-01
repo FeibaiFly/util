@@ -3,7 +3,7 @@ package com.qtone.util;
 import com.qtone.util.dao.prod.ProdUcMapper;
 import com.qtone.util.dto.KqDeviceReportRecordLog;
 import com.qtone.util.dto.KqDeviceReportSendMsgLog;
-import com.qtone.util.dto.SchoolKqInfo;
+import com.qtone.util.dto.KqWorkCheckInStudentRecord;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,10 +37,10 @@ public class StaticsKqDataTests {
      */
     @Test
     public void getSchoolKqReportInfo() throws IOException {
-        Integer schoolId =10036249;
-        Integer classId =11486402;
-        String startDate = "2023-11-23 00:00:00";
-        String endDate = "2023-11-24 00:00:00";
+        Integer schoolId =10029574;
+        Integer classId =11486664;
+        String startDate = "2023-11-24 00:00:00";
+        String endDate = "2023-11-25 00:00:00";
         long startTime = DateUtils.getDate(startDate,DateUtils.DAFAULT_DATETIME_FORMAT).getTime();
         long endTime = DateUtils.getDate(endDate,DateUtils.DAFAULT_DATETIME_FORMAT).getTime();
         Query query = new Query();
@@ -73,10 +73,10 @@ public class StaticsKqDataTests {
      */
     @Test
     public void getSchoolKqReportSendInfo() throws IOException {
-        Integer schoolId =10036249;
-        String classId ="11486402";
-        String startDate = "2023-11-23 00:00:00";
-        String endDate = "2023-11-24 00:00:00";
+        Integer schoolId =10029574;
+        String classId ="11486664";
+        String startDate = "2023-11-24 00:00:00";
+        String endDate = "2023-11-25 00:00:00";
         Query query = new Query();
         Criteria criteria = new Criteria();
         criteria.and("schoolId").is(schoolId);
@@ -89,10 +89,12 @@ public class StaticsKqDataTests {
         List<KqDeviceReportSendMsgLog> kqSendMsgList = attendanceMongoTemplate.find(query, KqDeviceReportSendMsgLog.class,"kqDeviceReportSendMsgLog");
         List<String> resultList = new ArrayList<>();
         for(KqDeviceReportSendMsgLog log:kqSendMsgList){
+            KqWorkCheckInStudentRecord record =  attendanceMongoTemplate.findById(log.getDataId(), KqWorkCheckInStudentRecord.class);
             StringBuffer line = new StringBuffer();
             line.append(log.getRelationUserName()).append("(").append(log.getRelationUserId()).append("),").append("家长：").append(log.getNotifyUserName())
                     .append("(").append(log.getNotifyUserTel()).append("),").append(log.getSendTime()).append(",").append(log.getSendWayValue())
-                    .append(",").append(log.getMsgTagValue()).append(",").append(log.getRstStatusValue()).append(",").append(log.getSendMsg());
+                    .append(",").append(log.getMsgTagValue()).append(",").append(log.getRstStatusValue()).append(",").append(log.getSendMsg())
+                    .append(",").append(record.getGradeName()).append(",").append(record.getClassName()).append(",").append(record.getDeviceName()).append(",").append(record.getDevicePosition());
             resultList.add(line.toString());
         }
         String filePath = "D:\\Deskop\\智学互动\\运营导出脚本\\"+schoolId+"考勤消息通知日志.txt";

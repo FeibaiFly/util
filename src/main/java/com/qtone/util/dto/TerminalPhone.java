@@ -48,31 +48,6 @@ public class TerminalPhone extends Model<TerminalPhone> {
      * 用户电话号码
      */
     private String userTel;
-
-    /**
-     * 带星手机号
-     */
-    private String userTelMask;
-    /**
-     * 密码
-     */
-    private String password;
-    /**
-     * 卡类型：1电子工卡，2白卡
-     */
-    private Integer cardType;
-    /**
-     * 卡状态 1 正常 2 挂失 3 未发卡   4注销
-     */
-    private Integer cardStatus;
-    /**
-     * 发卡时间
-     */
-    private String sendTime;
-
-    //状态(0:正常；1:停用)
-    private Integer status;
-
     /**
      * 卡号
      */
@@ -101,7 +76,13 @@ public class TerminalPhone extends Model<TerminalPhone> {
      * 学校名称
      */
     private String schoolName;
-
+    //省市区
+    private Integer provinceId;
+    private String provinceName;
+    private Integer cityId;
+    private String cityName;
+    private Integer districtId;
+    private String districtName;
     /**
      * 班级id 扩展字段
      */
@@ -121,6 +102,34 @@ public class TerminalPhone extends Model<TerminalPhone> {
      * 年级名称
      */
     private String gradeName;
+
+    /**
+     * 带星手机号
+     */
+    private String userTelMask;
+    /**
+     * 密码
+     */
+    private String password;
+    /**
+     * 卡类型：1电子工卡，2白卡
+     */
+    private Integer cardType;
+    /**
+     * 卡状态 1 正常 2 挂失 3 未发卡   4注销
+     */
+    private Integer cardStatus;
+    /**
+     * 发卡时间
+     */
+    private String sendTime;
+
+    //状态(0:正常；1:停用)
+    private Integer status;
+
+
+
+
 
     /**
      * 创建时间
@@ -143,13 +152,7 @@ public class TerminalPhone extends Model<TerminalPhone> {
     @TableLogic
     private Integer isDeleted;
 
-    //省市区
-    private Integer provinceId;
-    private String provinceName;
-    private Integer cityId;
-    private String cityName;
-    private Integer districtId;
-    private String districtName;
+
 
     @TableField(exist = false)
     private String departmentName;

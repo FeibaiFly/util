@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qtone.util.dao.prod.ProdGpsMapper">
+     <!-- 通用查询映射结果 -->
+    <resultMap id="TerminalPhoneMap" type="com.qtone.util.dto.TerminalPhone">
+        <!--@mbg.generated-->
+        <!--@Table terminal_phone-->
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="user_type" property="userType"/>
+        <result column="user_tel" property="userTel"/>
+        <result column="card_num" property="cardNum"/>
+        <result column="imei" property="imei"/>
+        <result column="iccid" property="iccid"/>
+        <result column="phone" property="phone"/>
+        <result column="school_id" property="schoolId"/>
+        <result column="school_name" property="schoolName"/>
+        <result column="province_id" property="provinceId"/>
+        <result column="province_name" property="provinceName"/>
+        <result column="city_id" property="cityId"/>
+        <result column="city_name" property="cityName"/>
+        <result column="district_id" property="districtId"/>
+        <result column="district_name" property="districtName"/>
+        <result column="class_id" property="classId"/>
+        <result column="class_name" property="className"/>
+        <result column="grade_id" property="gradeId"/>
+        <result column="grade_name" property="gradeName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="delete_time" property="deleteTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+    </resultMap>
+    <select id="getTerminalPhoneList" resultMap="TerminalPhoneMap">
+        SELECT
+        t.id,
+        t.user_id,
+        t.user_name,
+        t.user_type,
+        t.user_tel,
+        t.card_num,
+        t.imei,
+        t.iccid,
+        t.phone,
+        t.school_id,
+        t.school_name,
+        t.province_id,
+        t.province_name,
+        t.city_id,
+        t.city_name,
+        t.district_id,
+        t.district_name,
+        t.class_id,
+        t.class_name,
+        t.grade_id,
+        t.grade_name,
+        t.create_time,
+        t.update_time,
+        t.delete_time,
+        t.is_deleted
+        FROM
+            hdkt_gps.terminal_phone t
+            LEFT JOIN  hdkt_prod.school sc on t.school_id = sc.id
+        WHERE
+            sc.`province_id` = #{provinceId}
+            AND sc.is_deleted = 0
+            and t.`update_time` > #{updateTime}
+            and t.is_deleted =0 order by t.create_time asc;
+    </select>
+</mapper>

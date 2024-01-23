@@ -18,6 +18,7 @@ public class BindInfo {
     private String districtName;
 
     private String schoolName;
+
     private String parentTel;
 
     private String imeiPhone;

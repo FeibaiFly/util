@@ -123,8 +123,8 @@ public class UtilApplicationTests {
     @Test
     public void statisticsCountryMonthData() throws Exception {
         CardOrderRequest request = new CardOrderRequest();
-        String startTime = "2023-10-01 00:00:00";
-        String endTime ="2023-11-01 00:00:00";
+        String startTime = "2023-12-01 00:00:00";
+        String endTime ="2024-01-01 00:00:00";
         request.setStartTime(startTime);
         request.setEndTime(endTime);
         weeklyDataStatisticsService.statisticsCountryMothData(request);

@@ -17,7 +17,6 @@ public class MpAesUtilProd {
     public static void main(String[] args){
     	String sourceFile ="D:\\Deskop\\智学互动\\source.txt";
     	String targetFile = "D:\\Deskop\\智学互动\\result.txt";
-    	String catchFile = "C:\\Users\\17272\\Desktop\\运营支撑脚本\\陕西活跃imei号.txt";
     	readTxtFile(sourceFile,targetFile);
 //        catchWord(sourceFile,catchFile,targetFile);
 //        try {
@@ -119,7 +118,7 @@ public class MpAesUtilProd {
 //                                 }
 //                                 continue;
 //                            }
-                            if(i==0){
+                            if(i>=6){
                                 sb.append(decode(str)+",");
                             }else {
                                 sb.append(str+",");

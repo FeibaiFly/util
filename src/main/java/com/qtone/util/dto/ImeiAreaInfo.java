@@ -11,6 +11,7 @@ import lombok.Data;
 @Data
 public class ImeiAreaInfo {
     private String imei="";
+    private Integer userId;
     private String provinceName="";
     private String cityName="";
     private String districtName="";

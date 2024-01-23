@@ -399,4 +399,66 @@ FROM
 	left join hdkt_gps.terminal t2 on tp.imei = t2.teno
 	where sc.province_id = #{provinceId} and LENGTH(se.imei)>2 and s.is_deleted=0
 </select>
+
+<select id="getImeiInfoByCityId" resultType="com.qtone.util.dto.SchoolDeviceInfo">
+SELECT
+	sc.province_name provinceName,
+	sc.city_name cityName,
+	sc.district_name districtName,
+	sc.id shoolId,
+	sc.schoolName,
+	se.imei
+FROM
+	school sc
+	LEFT JOIN student s ON sc.id = s.school_id
+	LEFT JOIN student_extend se ON s.id = se.id
+WHERE
+	sc.city_id  in
+	<foreach collection="cityIds" item="item" separator="," open="(" close=")">
+	#{item}
+	</foreach>
+	AND s.is_deleted = 0
+	and LENGTH(se.imei)>5
+</select>
+
+<select id="getStudentNameById" resultType="com.qtone.util.dto.StudentInfo">
+    SELECT id, studentName from student where id in
+    <foreach collection="studentIds" item="item" separator="," open="(" close=")">
+	    #{item}
+	</foreach>
+</select>
+
+    <select id="getStudentIdBySchoolId" resultType="com.qtone.util.dto.StudentInfo">
+        SELECT id, studentName from student where school_id = #{schoolId} and is_deleted=0;
+    </select>
+    
+    <select id="getStudentBindInfo" resultType="com.qtone.util.dto.HistoryImeiInfo">
+        SELECT
+            sc.province_name provinceName,
+            sc.city_name cityName,
+            sc.district_name districtName,
+            sc.schoolName,
+            s.id userId,
+            s.studentName userName,
+            se.imei,
+            s.cardNum rfid,
+            se.imei_phone imeiPhone,
+            s.send_time createTime,
+            GROUP_CONCAT(p.parentTel) parentTel
+        FROM
+            student s
+            LEFT JOIN school sc ON s.school_id = sc.id
+            LEFT JOIN student_extend se on s.id =se.id
+            LEFT JOIN student_parent sp on s.id = sp.student_id
+            LEFT JOIN parent p on sp.parent_id = p.id and p.is_deleted=0
+            where
+            s.is_deleted=0
+            <if test="isBind!=null and isBind==1">
+                and length(se.imei)>3
+            </if>
+            <if test="provinceId!=null">
+                and sc.province_id = #{provinceId}
+            </if>
+	        GROUP BY s.id
+</select>
 </mapper>

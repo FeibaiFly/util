@@ -1,6 +1,8 @@
 package com.qtone.util;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author: zhangpk
@@ -53,6 +55,32 @@ public class TxtUtil {
 //            }
 //        }
 //        System.out.println(count);
+    }
+
+
+    public static List<String> read(String fileName1) throws IOException {
+        String str="";
+        List<String> list = new ArrayList<>();
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(fileName1))));
+        while ((str = br.readLine()) != null) {
+            if (str.isEmpty() == false) {
+                list.add(str);
+            }
+        }
+        return list;
+    }
+
+    public static List<String> write(List<String> contents, String fileName) throws IOException {
+        String str="";
+        List<String> list = new ArrayList<>();
+        //写文件
+        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(fileName))));
+        for(String content:contents){
+            bufferedWriter.write(content + "\r\n");
+            //刷新
+            bufferedWriter.flush();
+        }
+        return list;
     }
 
 }
